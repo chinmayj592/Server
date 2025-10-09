@@ -9,3 +9,5 @@ import java.util.UUID;
 @Repository
 public interface OrganizerRepository extends JpaRepository<Organizer, UUID> {
 }
+
+
