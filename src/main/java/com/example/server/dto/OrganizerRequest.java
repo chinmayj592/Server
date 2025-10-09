@@ -14,3 +14,6 @@ public class OrganizerRequest {
     private String jobTitle;
     private HackathonType hackathonType;
 }
+
+
+
