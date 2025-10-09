@@ -25,3 +25,5 @@ public class OrganizerService {
         return organizerRepository.save(organizer);
     }
 }
+
+
