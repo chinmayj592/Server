@@ -1,8 +1,6 @@
 package com.example.server.config;
 
 import com.example.server.security.JwtAuthenticationFilter;
-import com.example.server.security.oauth.CustomOAuth2UserService;
-import com.example.server.security.oauth.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +23,6 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -42,10 +38,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/error", "/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()
                 .anyRequest().permitAll()
-            )
-            .oauth2Login(oauth -> oauth
-                .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
-                .successHandler(oAuth2AuthenticationSuccessHandler)
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
