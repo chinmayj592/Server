@@ -16,15 +16,19 @@ public class JwtUtil {
     
     @Value("${jwt.secret}")
     private String secret;
-    
-    @Value("${jwt.expiration}")
+
     private Long expiration;
     
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
     
-    public String generateToken(UUID userId, String username) {
+    public String generateToken(UUID userId, String username, boolean rememberMe) {
+        if (rememberMe) {
+            expiration = 604800000L; // 7 days
+        } else {
+            expiration = 86400000L; // 1 day
+        }
         return Jwts.builder()
                 .setSubject(userId.toString())
                 .claim("username", username)

@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -43,9 +45,22 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
         
-        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername(), request.isRememberMe());
         UserDetailsDto userDetails = new UserDetailsDto(user.getId(), user.getFullName(), user.getEmail(), user.getUsername());
         
         return new AuthResponse(token, userDetails);
+    }
+
+    public AuthResponse getUserFromToken(String token) {
+        if (token == null || !jwtUtil.validateToken(token)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
+
+        UUID userId = jwtUtil.extractUserId(token);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+
+        UserDetailsDto userDetails = new UserDetailsDto(user.getId(), user.getFullName(), user.getEmail(), user.getUsername());
+        return new AuthResponse(userDetails);
     }
 }
