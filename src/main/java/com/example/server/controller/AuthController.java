@@ -69,16 +69,32 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@CookieValue(name = "jwt", required = false) String token) {
+        try {
+            // If token is null or invalid, return null instead of 401
+            if (token == null || token.isEmpty()) {
+                return ResponseEntity.ok(null);
+            }
 
-        AuthResponse authResponse = authService.getUserFromToken(token);
+            AuthResponse authResponse = authService.getUserFromToken(token);
 
-        UserDetailsDto user = authResponse.getUser();
+            // If authResponse or user is null, return null
+            if (authResponse == null || authResponse.getUser() == null) {
+                return ResponseEntity.ok(null);
+            }
 
-        return ResponseEntity.ok(Map.of(
-                "fullName", user.getFullName(),
-                "username", user.getUsername(),
-                "email", user.getEmail()
-        ));
+            UserDetailsDto user = authResponse.getUser();
+
+            // Return user info if present
+            return ResponseEntity.ok(Map.of(
+                    "fullName", user.getFullName(),
+                    "username", user.getUsername(),
+                    "email", user.getEmail()
+            ));
+
+        } catch (Exception e) {
+            // Only unexpected errors propagate (500)
+            throw e;
+        }
     }
 
     @PostMapping("/signout")
