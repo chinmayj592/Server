@@ -4,12 +4,11 @@ import com.example.server.dto.AuthResponse;
 import com.example.server.dto.LoginRequest;
 import com.example.server.dto.RegisterRequest;
 import com.example.server.dto.UserDetailsDto;
-import com.example.server.entity.User;
 import com.example.server.service.AuthService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -32,7 +32,7 @@ public class AuthController {
 
     
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody RegisterRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> signup(@Valid @RequestBody RegisterRequest request) {
         authService.register(request);
         return ResponseEntity.ok("User created successfully");
     }
@@ -93,6 +93,7 @@ public class AuthController {
 
         } catch (Exception e) {
             // Only unexpected errors propagate (500)
+            log.error(e.getMessage());
             throw e;
         }
     }
