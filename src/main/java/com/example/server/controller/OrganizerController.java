@@ -22,7 +22,7 @@ public class OrganizerController {
         return ResponseEntity.ok("Organizer endpoint is working");
     }
     
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<?> createOrganizer(@RequestBody OrganizerRequest request) {
         organizerService.createOrganizer(request);
         return ResponseEntity.ok("Organizer registered successfully");
