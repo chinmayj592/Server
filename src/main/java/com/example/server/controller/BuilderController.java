@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/builders")
+@RequestMapping("/api/builder")
 @CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 public class BuilderController {

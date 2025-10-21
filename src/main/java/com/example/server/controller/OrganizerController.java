@@ -10,19 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/organizers")
+@RequestMapping("/api/organizer")
 @CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 public class OrganizerController {
     
     private final OrganizerService organizerService;
-    
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok("Organizer endpoint is working");
-    }
-    
-    @PostMapping("/")
+
+    @PostMapping
     public ResponseEntity<?> createOrganizer(@RequestBody OrganizerRequest request) {
         organizerService.createOrganizer(request);
         return ResponseEntity.ok("Organizer registered successfully");
